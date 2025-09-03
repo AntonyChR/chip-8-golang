@@ -31,8 +31,7 @@ func main() {
 	err := chip8.LoadRom(&cpu, *ROM)
 
 	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
+		log.Fatal(err.Error())
 	}
 
 	// Initilize sdl
@@ -41,10 +40,18 @@ func main() {
 	}
 	defer sdl.Quit()
 
-	window, err := sdl.CreateWindow("CHIP-8", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, sdl.WINDOW_SHOWN)
+	window, err := sdl.CreateWindow(
+		"CHIP-8", 
+		sdl.WINDOWPOS_UNDEFINED, 
+		sdl.WINDOWPOS_UNDEFINED, 
+		WINDOW_WIDTH, 
+		WINDOW_HEIGHT, 
+		sdl.WINDOW_SHOWN)
+
 	if err != nil {
 		log.Fatalf("Error creating window: %v", err)
 	}
+
 	defer window.Destroy()
 
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
@@ -55,8 +62,8 @@ func main() {
 
 	audioSpec := chip8.CreateAudioSpec()
 	if err := sdl.OpenAudio(audioSpec, nil); err != nil {
+		log.Println("Error: sound disabled")
 		log.Println(err)
-		return
 	}
 
 	sdl.PauseAudio(true)
